@@ -13,6 +13,8 @@ It allows the beginner to practice the basic concepts (CRUD) in an application.
  
 ## Possible features
 
+  - [ ] Dissable the button confirm si the new task is null or the old task is egals the newtask.
+  - [ ] Use flutter snackBar for message (Add - Delete - Edit).
   - [ ] Users could change the color scheme of the app.
   - [ ] Navigation between : all task - done tasks - not done task
   - Save task :
