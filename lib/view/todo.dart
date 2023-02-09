@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_todo/models/task.dart';
 import 'package:flutter_todo/view/displateDialog/add.dart';
 import 'package:flutter_todo/view/displateDialog/edit.dart';
+import 'package:flutter_todo/view/snackbar/delete_snackbar.dart';
+import 'package:flutter_todo/view/snackbar/checked_snackbar.dart';
+import 'package:flutter_todo/view/snackbar/edit_snackbar.dart';
 
 class Todo extends StatefulWidget {
   const Todo({super.key});
@@ -60,6 +63,7 @@ class _TodoState extends State<Todo> {
             }
             else if (direction == DismissDirection.endToStart){
               deleteTask(index);
+              DeleteSnackbar(context);
             }
           },
           child: ListTile(
@@ -68,6 +72,7 @@ class _TodoState extends State<Todo> {
               tristate: true,
               onChanged: (e) {
                 setState(() {
+                  EditSnackbar(context);
                   tasks[index].check();
                 });
               },

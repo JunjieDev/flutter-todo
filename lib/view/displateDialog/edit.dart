@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_todo/view/snackbar/edit_snackbar.dart';
+import 'package:flutter_todo/view/snackbar/cancel_snackbar.dart';
 
 class EditDisplay {
   final Function editTask;
@@ -8,6 +10,7 @@ class EditDisplay {
     String valueText = oldText;
 
     return showDialog(
+      barrierDismissible: false,
       context: context,
       builder: (context) => AlertDialog(
         title: Center(child: Text('Edit Task :\n$oldText')),
@@ -23,6 +26,7 @@ class EditDisplay {
             child: const Text('CONFIRM'),
             onPressed: () {
               if (valueText.isNotEmpty && valueText != oldText){
+                EditSnackbar(context);
                 editTask(index, valueText);
                 Navigator.pop(context);
               }
@@ -31,6 +35,7 @@ class EditDisplay {
           TextButton(
             child: const Text('CANCEL'),
             onPressed: () {
+              CancelSnackbar(context);
               Navigator.pop(context);
             },
           ),

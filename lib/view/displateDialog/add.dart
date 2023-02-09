@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_todo/view/snackbar/add_snackbar.dart';
+import 'package:flutter_todo/view/snackbar/cancel_snackbar.dart';
 
 class AddDisplay {
   final Function addTask;
@@ -25,6 +27,7 @@ class AddDisplay {
             child: const Text('CONFIRM'),
             onPressed: () {
               if (valueText.isNotEmpty){
+                AddSnackbar(context);
                 addTask(valueText);
                 Navigator.pop(context);
               }
@@ -33,6 +36,7 @@ class AddDisplay {
           TextButton(
             child: const Text('CANCEL'),
             onPressed: () {
+              CancelSnackbar(context);
               Navigator.pop(context);
             },
           ),
