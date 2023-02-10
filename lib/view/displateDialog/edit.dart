@@ -12,38 +12,37 @@ class EditDisplay {
     return showDialog(
       barrierDismissible: false,
       context: context,
-      builder: (context) => AlertDialog(
-        title: Center(child: Text('Edit Task :\n$oldText')),
-        actionsAlignment: MainAxisAlignment.center,
-        content: TextFormField(
-          onChanged: (value) {
-            valueText = value;
-          },
-          initialValue: oldText, 
-        ),
-        actions: <Widget>[
-          TextButton(
-            child: const Text('CONFIRM'),
-            onPressed: () {
-              if (valueText.isNotEmpty && valueText != oldText){
+      builder: (context) => StatefulBuilder(
+        builder: (context, setState) => AlertDialog(
+          title: Center(child: Text('Edit Task :\n$oldText')),
+          actionsAlignment: MainAxisAlignment.center,
+          content: TextFormField(
+            onChanged: (value) {
+              setState(() {
+                valueText = value;
+              });
+            },
+            initialValue: oldText, 
+          ),
+          actions: <Widget>[
+            TextButton(
+              onPressed: (valueText.isEmpty || valueText == oldText) ? null : () {
                 EditSnackbar(context);
                 editTask(index, valueText);
                 Navigator.pop(context);
-              }
-            },
-          ),
-          TextButton(
-            child: const Text('CANCEL'),
-            onPressed: () {
-              CancelSnackbar(context);
-              Navigator.pop(context);
-            },
-          ),
-        ],
+              },
+              child: const Text('CONFIRM'),
+            ),
+            TextButton(
+              child: const Text('CANCEL'),
+              onPressed: () {
+                CancelSnackbar(context);
+                Navigator.pop(context);
+              },
+            ),
+          ],
+        )
       ),
     );
   }
-
-
-
 }

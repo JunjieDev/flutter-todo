@@ -11,36 +11,38 @@ class AddDisplay {
 
     return showDialog(
       context: context,
-      builder: (context) => AlertDialog(
-        title: const Center(child: Text('New Task')),
-        actionsAlignment: MainAxisAlignment.center,
-        content: TextField(
-          onChanged: (value) {
-            valueText = value;
-          },
-          decoration: const InputDecoration(
-            hintText: "New Task",
+      builder: (context) => StatefulBuilder(
+        builder: (context, setState) => AlertDialog(
+          title: const Center(child: Text('New Task')),
+          actionsAlignment: MainAxisAlignment.center,
+          content: TextField(
+            onChanged: (value) {
+              setState(() {
+                valueText = value;
+              });
+            },
+            decoration: const InputDecoration(
+              hintText: "New Task",
+            ),
           ),
-        ),
-        actions: <Widget>[
-          TextButton(
-            child: const Text('CONFIRM'),
-            onPressed: () {
-              if (valueText.isNotEmpty){
-                AddSnackbar(context);
-                addTask(valueText);
+          actions: <Widget>[
+            TextButton(
+              onPressed: valueText.isEmpty ? null : () {
+                  AddSnackbar(context);
+                  addTask(valueText);
+                  Navigator.pop(context);
+              },
+              child: const Text('CONFIRM'),
+            ),
+            TextButton(
+              child: const Text('CANCEL'),
+              onPressed: () {
+                CancelSnackbar(context);
                 Navigator.pop(context);
-              }
-            },
-          ),
-          TextButton(
-            child: const Text('CANCEL'),
-            onPressed: () {
-              CancelSnackbar(context);
-              Navigator.pop(context);
-            },
-          ),
-        ],
+              },
+            ),
+          ],
+        ) 
       ),
     );
   }
