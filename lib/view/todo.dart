@@ -56,7 +56,7 @@ class _TodoState extends State<Todo> {
             padding: const EdgeInsets.all(10),
             child: const Icon(Icons.delete),
           ),
-          key: ValueKey<String>(tasks[index].text),
+          key: Key(index.toString()),
           onDismissed: (DismissDirection direction) {
             if (direction == DismissDirection.startToEnd) {
               EditDisplay(editTask: editTask).editDisplayDialog(context, tasks[index].text, index);
