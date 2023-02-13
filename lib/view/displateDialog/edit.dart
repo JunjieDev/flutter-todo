@@ -4,7 +4,8 @@ import 'package:flutter_todo/view/snackbar/cancel_snackbar.dart';
 
 class EditDisplay {
   final Function editTask;
-  const EditDisplay({required this.editTask});
+  final Function sortTasks;
+  const EditDisplay({required this.editTask, required this.sortTasks});
 
   Future<void> editDisplayDialog(BuildContext context, String oldText, int index) async {
     String valueText = oldText;
@@ -37,6 +38,7 @@ class EditDisplay {
               child: const Text('CANCEL'),
               onPressed: () {
                 CancelSnackbar(context);
+                sortTasks();
                 Navigator.pop(context);
               },
             ),

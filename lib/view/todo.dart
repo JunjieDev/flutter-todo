@@ -4,7 +4,7 @@ import 'package:flutter_todo/view/displateDialog/add.dart';
 import 'package:flutter_todo/view/displateDialog/edit.dart';
 import 'package:flutter_todo/view/snackbar/delete_snackbar.dart';
 import 'package:flutter_todo/view/snackbar/checked_snackbar.dart';
-import 'package:flutter_todo/view/snackbar/edit_snackbar.dart';
+import 'package:flutter_todo/view/snackbar/unchecked_snackbar.dart';
 
 class Todo extends StatefulWidget {
   const Todo({super.key});
@@ -16,9 +16,19 @@ class Todo extends StatefulWidget {
 class _TodoState extends State<Todo> {
   final List<Task> tasks = [];
 
+  int getPrimiryKey(){
+    sortTasks();
+
+    if(tasks.isNotEmpty){
+      return tasks.last.id + 1;
+    }
+    
+    return 1;
+  }
+
   void addTask(String text){
     setState(() {
-      tasks.add(Task(checked: false, text: text));
+      tasks.add(Task(id: getPrimiryKey(), checked: false, text: text));
     });
   }
 
@@ -31,6 +41,12 @@ class _TodoState extends State<Todo> {
   void editTask(int index, String newText){
     setState(() {
       tasks[index].text = newText;
+    });
+  }
+
+  void sortTasks() {
+    setState(() {
+      tasks.sort((a, b) => a.id.compareTo(b.id));
     });
   }
 
@@ -56,10 +72,10 @@ class _TodoState extends State<Todo> {
             padding: const EdgeInsets.all(10),
             child: const Icon(Icons.delete),
           ),
-          key: Key(index.toString()),
+          key: UniqueKey(),
           onDismissed: (DismissDirection direction) {
             if (direction == DismissDirection.startToEnd) {
-              EditDisplay(editTask: editTask).editDisplayDialog(context, tasks[index].text, index);
+              EditDisplay(editTask: editTask, sortTasks: sortTasks).editDisplayDialog(context, tasks[index].text, index);
             }
             else if (direction == DismissDirection.endToStart){
               deleteTask(index);
@@ -72,8 +88,8 @@ class _TodoState extends State<Todo> {
               tristate: true,
               onChanged: (e) {
                 setState(() {
-                  EditSnackbar(context);
                   tasks[index].check();
+                  tasks[index].checked ? CheckedSnackbar(context) : UncheckedSnackbar(context);
                 });
               },
               activeColor: Colors.green,
