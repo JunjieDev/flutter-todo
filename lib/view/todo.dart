@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_todo/models/task.dart';
+import 'package:flutter_todo/view/searchBar.dart';
 import 'package:flutter_todo/view/displateDialog/add.dart';
 import 'package:flutter_todo/view/displateDialog/edit.dart';
 import 'package:flutter_todo/view/snackbar/delete_snackbar.dart';
@@ -56,55 +57,62 @@ class _TodoState extends State<Todo> {
       title: const Text('Todo App'),
       centerTitle: true,
     ),
-    body: ListView.builder(
-      itemCount: tasks.length,
-      itemBuilder:(context, index) {
-        return Dismissible(
-          background: Container(
-            color: Colors.yellow,
-            alignment: Alignment.centerLeft,
-            padding: const EdgeInsets.all(10),
-            child: const Icon(Icons.edit),
-          ),
-          secondaryBackground: Container(
-            color: Colors.red,
-            alignment: Alignment.centerRight,
-            padding: const EdgeInsets.all(10),
-            child: const Icon(Icons.delete),
-          ),
-          key: UniqueKey(),
-          onDismissed: (DismissDirection direction) {
-            if (direction == DismissDirection.startToEnd) {
-              EditDisplay(editTask: editTask, sortTasks: sortTasks).editDisplayDialog(context, tasks[index].text, index);
+    body: Column(
+      children: <Widget>[
+        const SearchBar(),
+        Expanded(
+          child: ListView.builder(
+            itemCount: tasks.length,
+            itemBuilder:(context, index) {
+              return Dismissible(
+                background: Container(
+                  color: Colors.yellow,
+                  alignment: Alignment.centerLeft,
+                  padding: const EdgeInsets.all(10),
+                  child: const Icon(Icons.edit),
+                ),
+                secondaryBackground: Container(
+                  color: Colors.red,
+                  alignment: Alignment.centerRight,
+                  padding: const EdgeInsets.all(10),
+                  child: const Icon(Icons.delete),
+                ),
+                key: UniqueKey(),
+                onDismissed: (DismissDirection direction) {
+                  if (direction == DismissDirection.startToEnd) {
+                    EditDisplay(editTask: editTask, sortTasks: sortTasks).editDisplayDialog(context, tasks[index].text, index);
+                  }
+                  else if (direction == DismissDirection.endToStart){
+                    deleteTask(index);
+                    DeleteSnackbar(context);
+                  }
+                },
+                child: ListTile(
+                  leading: Checkbox(
+                    value: tasks[index].checked, 
+                    tristate: true,
+                    onChanged: (e) {
+                      setState(() {
+                        tasks[index].check();
+                        tasks[index].checked ? CheckedSnackbar(context) : UncheckedSnackbar(context);
+                      });
+                    },
+                    activeColor: Colors.green,
+                    checkColor: Colors.white,
+                  ),
+                  title: Text(
+                    tasks[index].text,
+                    style: TextStyle(
+                      color: tasks[index].checked ? Colors.grey : Colors.black,
+                      decoration: tasks[index].checked ? TextDecoration.lineThrough : TextDecoration.none
+                    ),
+                  ),
+                ),
+              );
             }
-            else if (direction == DismissDirection.endToStart){
-              deleteTask(index);
-              DeleteSnackbar(context);
-            }
-          },
-          child: ListTile(
-            leading: Checkbox(
-              value: tasks[index].checked, 
-              tristate: true,
-              onChanged: (e) {
-                setState(() {
-                  tasks[index].check();
-                  tasks[index].checked ? CheckedSnackbar(context) : UncheckedSnackbar(context);
-                });
-              },
-              activeColor: Colors.green,
-              checkColor: Colors.white,
-            ),
-            title: Text(
-              tasks[index].text,
-              style: TextStyle(
-                color: tasks[index].checked ? Colors.grey : Colors.black,
-                decoration: tasks[index].checked ? TextDecoration.lineThrough : TextDecoration.none
-              ),
-            ),
           ),
-        );
-      }
+        ),
+      ],
     ),
     floatingActionButton: FloatingActionButton(
       onPressed: () => AddDisplay(addTask: addTask).addDisplayDialog(context),
