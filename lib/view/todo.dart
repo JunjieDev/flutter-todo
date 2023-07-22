@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_todo/models/task.dart';
-import 'package:flutter_todo/view/searchBar.dart';
+import 'package:flutter_todo/view/search.dart';
 import 'package:flutter_todo/view/displateDialog/add.dart';
 import 'package:flutter_todo/view/displateDialog/edit.dart';
 import 'package:flutter_todo/view/snackbar/delete_snackbar.dart';
@@ -16,14 +16,19 @@ class Todo extends StatefulWidget {
 
 class _TodoState extends State<Todo> {
   final List<Task> tasks = [];
+  bool _search = false;
+
+  void searchChange() {
+    setState(() {
+      _search = ! _search;
+    });
+  }
 
   int getPrimiryKey(){
     sortTasks();
-
     if(tasks.isNotEmpty){
       return tasks.last.id + 1;
     }
-    
     return 1;
   }
 
@@ -56,10 +61,21 @@ class _TodoState extends State<Todo> {
     appBar: AppBar(
       title: const Text('Todo App'),
       centerTitle: true,
+      actions: <Widget>[
+        IconButton(
+          icon: const Icon(Icons.search),
+          onPressed: () {
+            searchChange();
+          },
+        )
+      ],
     ),
     body: Column(
       children: <Widget>[
-        const SearchBar(),
+        Visibility(
+          visible: _search,
+          child: const Search()
+        ),
         Expanded(
           child: ListView.builder(
             itemCount: tasks.length,
