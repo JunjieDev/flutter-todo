@@ -16,11 +16,11 @@ class Todo extends StatefulWidget {
 
 class _TodoState extends State<Todo> {
   final List<Task> tasks = [];
-  bool _search = false;
+  bool searchVisibility = false;
 
   void searchChange() {
     setState(() {
-      _search = ! _search;
+      searchVisibility = ! searchVisibility;
     });
   }
 
@@ -72,10 +72,7 @@ class _TodoState extends State<Todo> {
     ),
     body: Column(
       children: <Widget>[
-        Visibility(
-          visible: _search,
-          child: const Search()
-        ),
+        Search(searchVisibility: searchVisibility),
         Expanded(
           child: ListView.builder(
             itemCount: tasks.length,
